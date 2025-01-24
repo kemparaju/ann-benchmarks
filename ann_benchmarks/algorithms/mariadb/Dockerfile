@@ -7,7 +7,7 @@ RUN curl -LO https://github.com/MariaDB/server/raw/HEAD/debian/control
 RUN mk-build-deps -r -i control -t 'apt-get -y -o Debug::pkgProblemResolver=yes --no-install-recommends'
 
 # Install python MariaDB connector
-RUN pip3 install mariadb
+RUN pip install mariadb
 
 # Current development branch for vector support:
 RUN git clone --branch bb-11.4-vec-vicentiu https://github.com/MariaDB/server.git --depth 1
