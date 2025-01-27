@@ -1,9 +1,10 @@
 #!/bin/bash --login
-set -e
+#set -e
+eval "$("$MAMBA_EXE" shell hook --shell bash --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
 micromamba activate benchmark_env
-exec "$@"
+#exec "$@"
 micromamba install --yes python=3.10.6
-micromamba install --yes scipy numpy git pip
+micromamba install --yes scipy numpy pip
 python --version | grep 'Python 3.10'
 pip install docker
 micromamba install -y -c conda-forge ansicolors==1.1.8 h5py==3.8.0 matplotlib==3.6.3 numpy==1.24.2 psutil==5.9.4 pytest==7.2.2
