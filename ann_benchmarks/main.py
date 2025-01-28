@@ -187,7 +187,8 @@ def filter_by_available_docker_images(definitions: List[Definition]) -> List[Def
         List[Definition]: A list of algorithm definitions that are associated with available Docker images.
     """
     docker_client = docker.from_env()
-    docker_tags = {tag.split(":")[0] for image in docker_client.images.list() for tag in image.tags}
+    # docker_tags = {tag.split(":")[0] for image in docker_client.images.list() for tag in image.tags}
+    docker_tags = {(tag.split(":")[0]).split("/")[1] for image in docker_client.images.list() for tag in image.tags}
 
     print("line 192: DOCKER_TAGS:", docker_tags)
 
