@@ -16,6 +16,8 @@ def download(source_url: str, destination_path: str) -> None:
         source_url (str): The URL of the file to download.
         destination_path (str): The local path where the file should be saved.
     """
+    print("source url:", source_url)
+    print("destination url:", destination_path)
     if not os.path.exists(destination_path):
         print(f"downloading {source_url} -> {destination_path}...")
         urlretrieve(source_url, destination_path)
@@ -52,6 +54,8 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
     hdf5_filename = get_dataset_fn(dataset_name)
     try:
         dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
+        print("DATASET_URL", dataset_url)
+        print("HDF5_FILENAME", hdf5_filename)
         download(dataset_url, hdf5_filename)
     except:
         print(f"Cannot download {dataset_url}")
@@ -64,6 +68,7 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
     # here for backward compatibility, to ensure old datasets can still be used with newer versions
     # cast to integer because the json parser (later on) cannot interpret numpy integers
     dimension = int(hdf5_file.attrs["dimension"]) if "dimension" in hdf5_file.attrs else len(hdf5_file["train"][0])
+    print("DIMENSION:", dimension)    
     return hdf5_file, dimension
 
 
@@ -196,7 +201,7 @@ def train_test_split(X: numpy.ndarray, test_size: int = 10000, dimension: int = 
     from sklearn.model_selection import train_test_split as sklearn_train_test_split
 
     dimension = dimension if not None else X.shape[1]
-    print(f"Splitting {X.shape[0]}*{dimension} into train/test")
+    # print(f"Splitting {X.shape[0]}*{dimension} into train/test")
     return sklearn_train_test_split(X, test_size=test_size, random_state=1)
 
 
