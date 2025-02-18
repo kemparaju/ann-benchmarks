@@ -123,6 +123,8 @@ def parse_arguments() -> argparse.Namespace:
     )
     parser.add_argument("--run-disabled", help="run algorithms that are disabled in algos.yml", action="store_true")
     parser.add_argument("--parallelism", type=positive_int, help="Number of Docker containers in parallel", default=1)
+    parser.add_argument( "--module", help='Python module containing algorithm. E.g. "ann_benchmarks.algorithms.annoy"')
+    parser.add_argument("--constructor", help='Constructer to load from modulel. E.g. "Annoy"')
 
     args = parser.parse_args()
     if args.timeout == -1:
@@ -301,7 +303,10 @@ def limit_algorithms(definitions: List[Definition], limit: int) -> List[Definiti
 
 
 def main():
+    print("PRINT main.py line: 301")
     args = parse_arguments()
+
+    print("MAIN.PY LINE: 304, args:", args)
 
     if args.list_algorithms:
         list_algorithms(args.definitions)

@@ -38,6 +38,7 @@ def instantiate_algorithm(definition: Definition) -> BaseANN:
     print(f"Trying to instantiate {definition.module}.{definition.constructor}({definition.arguments})")
     module = importlib.import_module(f"{definition.module}.module")
     constructor = getattr(module, definition.constructor)
+    print("line 41, definitions.py", definition)
     return constructor(*definition.arguments)
 
 

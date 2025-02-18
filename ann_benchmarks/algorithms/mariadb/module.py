@@ -55,6 +55,8 @@ def vector_to_hex(v):
 class MariaDB(BaseANN):
 
     def __init__(self, metric, method_param):
+        print ("line 58, module.py, method_param: ", method_param)
+        print ("line 59, module.py, metring: ", metric)
         self._test_time = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
         self._metric = metric
         self._m = method_param['M']
