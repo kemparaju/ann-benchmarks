@@ -75,13 +75,26 @@ class MariaDB(BaseANN):
         else:
             raise RuntimeError(f"unknown metric {metric}")
         
-        self.prepare_options()
-        self.initialize_db()
-        self.start_db()
+        self.prepare_perf()
+        # self.prepare_options()
+        # self.initialize_db()
+        # self.start_db()
 
         # Connect to MariaDB using Unix socket
-        conn = mariadb.connect(unix_socket=self._socket_file)
+        # conn = mariadb.connect(unix_socket=self._socket_file)
+        conn = mariadb.connect(
+                host="129.40.75.147",
+                port=3306,
+               )
         self._cur = conn.cursor()
+
+    def prepare_perf(self):
+        self._perf_stat = os.environ.get('PERF', 'no') == 'yes' and MariaDB.can_run_perf()
+        self._perf_record = os.environ.get('FLAMEGRAPH', 'no') == 'yes' and MariaDB.can_run_flamegraph()
+
+        if self._perf_stat and self._perf_record:
+            self._perf_stat = False
+            print("\nWarning: Better not to enable both PERF and FLAMEGRAPH. Generating a flame graph only.\n") 
 
     def prepare_options(self):
         self._perf_stat = os.environ.get('PERF', 'no') == 'yes' and MariaDB.can_run_perf()
@@ -292,7 +305,7 @@ class MariaDB(BaseANN):
           CREATE TABLE t1 (
             id INT PRIMARY KEY,
             v VECTOR({len(X[0])}) NOT NULL,
-            VECTOR INDEX (v) DISTANCE_FUNCTION={self._metric}
+            VECTOR INDEX (v) DISTANCE={self._metric}
           ) MIN_ROWS={len(X)} ENGINE={self._engine}
         """)
 
@@ -375,7 +388,7 @@ class MariaDB(BaseANN):
     def done(self):
         # Shutdown MariaDB server when benchmarking done
         self._cur.execute("shutdown")
-        self._mariadbd_proc.wait(300)
+        # self._mariadbd_proc.wait(300)
         # Stop perf for searching and do final analysis
         self.perf_stop()
         self.perf_analysis()
