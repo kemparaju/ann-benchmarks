@@ -216,8 +216,11 @@ function"""
         for pos, query_arguments in enumerate(query_argument_groups, 1):
             print(f"Running query argument group {pos} of {len(query_argument_groups)}...")
             if query_arguments:
-                algo.set_query_arguments(*query_arguments)
-            
+                if (isinstance(*query_arguments, list)):
+                    algo.set_query_arguments(*query_arguments[0])
+                else:
+                    algo.set_query_arguments(*query_arguments)
+ 
             descriptor, results = run_individual_query(algo, X_train, X_test, distance, count, run_count, batch)
 
             descriptor.update({
