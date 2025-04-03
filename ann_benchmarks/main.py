@@ -192,8 +192,6 @@ def filter_by_available_docker_images(definitions: List[Definition]) -> List[Def
     # docker_tags = {tag.split(":")[0] for image in docker_client.images.list() for tag in image.tags}
     docker_tags = {(tag.split(":")[0]).split("/")[1] for image in docker_client.images.list() for tag in image.tags}
 
-    print("line 192: DOCKER_TAGS:", docker_tags)
-
     missing_docker_images = set(d.docker_tag for d in definitions).difference(docker_tags)
     if missing_docker_images:
         logger.info(f"not all docker images available, only: {docker_tags}")
@@ -303,10 +301,7 @@ def limit_algorithms(definitions: List[Definition], limit: int) -> List[Definiti
 
 
 def main():
-    print("PRINT main.py line: 301")
     args = parse_arguments()
-
-    print("MAIN.PY LINE: 304, args:", args)
 
     if args.list_algorithms:
         list_algorithms(args.definitions)
@@ -331,8 +326,6 @@ def main():
         force=args.force,
     )
 
-    # print("line 328, DEFINITIONS:", definitions) 
-
     if args.algorithm:
         logger.info(f"running only {args.algorithm}")
         definitions = [d for d in definitions if d.algorithm == args.algorithm]
@@ -346,7 +339,6 @@ def main():
             check_module_import_and_constructor, definitions
         ))
 
-    print("DEFINITIONS:", definitions)
     definitions = filter_disabled_algorithms(definitions) if not args.run_disabled else definitions
     definitions = limit_algorithms(definitions, args.max_n_algorithms)
 
